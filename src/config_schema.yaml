@@ -132,7 +132,7 @@ recording_options:
     type: int
     description: "The maximum duration in seconds for a recording when using press_to_toggle or hold_to_record modes. Recordings will still stop when the activation key is pressed again."
   countdown_duration:
-    value: 1000
+    value: 800
     type: int
     description: "The duration in milliseconds for the countdown before recording starts. Lower values make the app ready faster, but too low might miss the beginning of speech."
 

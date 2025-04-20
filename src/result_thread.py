@@ -208,7 +208,7 @@ class ResultThread(QThread):
                 ConfigManager.console_print(f"Recording finished. Duration: {duration:.2f} seconds, Frames: {frames_recorded}")
                 
                 # Save the recording for debugging
-                self._save_debug_recording(audio_data, "direct")
+                # self._save_debug_recording(audio_data, "direct")
                 
                 # Check if the recording is long enough
                 min_duration_ms = recording_options.get('min_duration') or 100
