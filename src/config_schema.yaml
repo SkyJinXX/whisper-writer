@@ -99,7 +99,7 @@ recording_options:
       - evdev
       - pynput
   recording_mode:
-    value: continuous
+    value: press_to_toggle
     type: str
     description: "The recording mode to use. Options include continuous (auto-restart recording after pause in speech until activation key is pressed again), voice_activity_detection (stop recording after pause in speech), press_to_toggle (stop recording when activation key is pressed again), hold_to_record (stop recording when activation key is released)."
     options:
@@ -123,6 +123,18 @@ recording_options:
     value: 100
     type: int
     description: "The minimum duration in milliseconds for a recording to be processed. Recordings shorter than this will be discarded."
+  pre_record_delay:
+    value: 2000
+    type: int
+    description: "The duration in milliseconds to pre-record before starting VAD to avoid missing the beginning of speech."
+  max_recording_seconds:
+    value: 1200
+    type: int
+    description: "The maximum duration in seconds for a recording when using press_to_toggle or hold_to_record modes. Recordings will still stop when the activation key is pressed again."
+  countdown_duration:
+    value: 1000
+    type: int
+    description: "The duration in milliseconds for the countdown before recording starts. Lower values make the app ready faster, but too low might miss the beginning of speech."
 
 # Post-processing options for the transcribed text
 post_processing:

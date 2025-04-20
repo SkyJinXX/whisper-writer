@@ -59,5 +59,6 @@ class MainWindow(BaseWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
-    window.show()
+    # Skip showing the initial window and directly start listening
+    window.startListening.emit()
     sys.exit(app.exec_())

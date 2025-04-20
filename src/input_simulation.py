@@ -3,6 +3,8 @@ import os
 import signal
 import time
 from pynput.keyboard import Controller as PynputController
+import pyperclip
+from pynput.keyboard import Key
 
 from utils import ConfigManager
 
@@ -68,16 +70,27 @@ class InputSimulator:
 
     def _typewrite_pynput(self, text, interval):
         """
-        Simulate typing using pynput.
-
-        Args:
-            text (str): The text to type.
-            interval (float): The interval between keystrokes in seconds.
+        使用剪贴板方式模拟输入
         """
-        for char in text:
-            self.keyboard.press(char)
-            self.keyboard.release(char)
+        # 保存当前剪贴板内容
+        old_clipboard = pyperclip.paste()
+        
+        try:
+            # 将要输入的文本复制到剪贴板
+            pyperclip.copy(text)
+            time.sleep(0.1)  # 给系统一点时间处理剪贴板
+            
+            # 模拟 Ctrl+V
+            self.keyboard.press(Key.ctrl)
+            self.keyboard.press('v')
+            self.keyboard.release('v')
+            time.sleep(0.1)  # 短暂延迟确保 Ctrl 被按下
+            self.keyboard.release(Key.ctrl)
             time.sleep(interval)
+        finally:
+            # 恢复原来的剪贴板内容
+            time.sleep(0.5)  # 给系统一点时间处理粘贴操作
+            pyperclip.copy(old_clipboard)
 
     def _typewrite_ydotool(self, text, interval):
         """

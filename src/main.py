@@ -63,7 +63,8 @@ class WhisperWriterApp(QObject):
             self.status_window = StatusWindow()
 
         self.create_tray_icon()
-        self.main_window.show()
+        # self.main_window.show()
+        self.main_window.startListening.emit()
 
     def create_tray_icon(self):
         """
@@ -150,8 +151,11 @@ class WhisperWriterApp(QObject):
 
         self.result_thread = ResultThread(self.local_model)
         if not ConfigManager.get_config_value('misc', 'hide_status_window'):
+            # Connect status window signals
             self.result_thread.statusSignal.connect(self.status_window.updateStatus)
             self.status_window.closeSignal.connect(self.stop_result_thread)
+            # Connect the ready signal from status window to result thread
+            self.status_window.readySignal.connect(self.on_recording_ready)
         self.result_thread.resultSignal.connect(self.on_transcription_complete)
         self.result_thread.start()
 
@@ -175,6 +179,21 @@ class WhisperWriterApp(QObject):
             self.start_result_thread()
         else:
             self.key_listener.start()
+
+    def on_recording_ready(self):
+        """
+        Called when the UI indicates recording is ready to begin
+        """
+        if self.result_thread and self.result_thread.isRunning():
+            # Play a short beep to indicate ready state
+            if ConfigManager.get_config_value('misc', 'noise_on_completion'):
+                AudioPlayer(os.path.join('assets', 'beep.wav')).play(block=True)
+            
+            # Update UI to show actually recording now
+            self.status_window.updateStatus('ready')
+            
+            # Tell the result thread to begin actual recording
+            self.result_thread.set_ready()
 
     def run(self):
         """
