@@ -130,3 +130,5 @@ dmypy.json
 
 # Configuration files
 config.yaml
+
+debug
