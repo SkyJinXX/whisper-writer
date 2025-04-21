@@ -179,9 +179,9 @@ class StatusWindow(BaseWindow):
             self.icon_label.setPixmap(self.microphone_pixmap)
             self.status_label.setText('Initializing...')
             self.show()
-            # Start a countdown before recording actually begins
-            # Get countdown duration from config (default to 1000ms if not set)
-            countdown_ms = ConfigManager.get_config_value('recording_options', 'countdown_duration') or 1000
+            # 倒计时非常短，几乎立即结束
+            countdown_ms = 1  # 使用1ms的倒计时，实际上是立即完成
+            ConfigManager.console_print(f"UI倒计时设为{countdown_ms}ms (立即完成)")
             self.startCountdown(countdown_ms)
         elif status == 'ready':
             self.icon_label.setPixmap(self.microphone_pixmap)

@@ -3,7 +3,7 @@ import sys
 import time
 from audioplayer import AudioPlayer
 from pynput.keyboard import Controller
-from PyQt5.QtCore import QObject, QProcess
+from PyQt5.QtCore import QObject, QProcess, QTimer
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QAction, QMessageBox
 
@@ -189,10 +189,10 @@ class WhisperWriterApp(QObject):
             if ConfigManager.get_config_value('misc', 'noise_on_completion'):
                 AudioPlayer(os.path.join('assets', 'beep.wav')).play(block=True)
             
-            # Update UI to show actually recording now
-            self.status_window.updateStatus('ready')
+            # 不再在这里更新UI状态，而是等待实际录音开始
+            # 实际录音开始后会由result_thread发出ready信号通知UI更新
             
-            # Tell the result thread to begin actual recording
+            # 告诉线程可以开始准备录音
             self.result_thread.set_ready()
 
     def run(self):
